@@ -14,9 +14,6 @@ BarWidget {
   readonly property string script: String(Qt.resolvedUrl("bin/omarchy-rabbit")).replace(/^file:\/\//, "")
   readonly property string stateDir: Quickshell.env("HOME") + "/.local/state/omarchy/rabbit"
 
-  // Height of the drawn rabbit, ears to chin. The bar is 26px tall.
-  readonly property real iconHeight: setting("iconHeight", 22)
-
   property bool enabled: false
 
   function refresh() {
@@ -80,6 +77,8 @@ BarWidget {
     id: button
     anchors.fill: parent
     bar: root.bar
+    text: "󰤇"
+    fontSize: Style.bar.iconFont * 2
     active: root.enabled
     opacity: root.enabled ? 1 : 0.45
     tooltipText: root.enabled ? "Always on: lid close, suspend, and idle blocked" : "Normal power: click to keep going and going"
@@ -92,68 +91,5 @@ BarWidget {
     }
 
     Behavior on opacity { NumberAnimation { duration: 160 } }
-
-    // A rabbit head drawn from rounded rectangles, so it recolors with the
-    // theme and scales cleanly to any bar size.
-    iconComponent: Component {
-      Item {
-        Item {
-          id: rabbit
-          anchors.centerIn: parent
-          readonly property real unit: root.iconHeight / 22
-          property color ink: root.enabled ? button.activeColor : button.foreground
-          readonly property color paper: root.bar ? root.bar.background : Color.background
-          width: 20 * unit
-          height: 22 * unit
-
-          Behavior on ink { ColorAnimation { duration: 160 } }
-
-          // Ears
-          Rectangle {
-            x: 4 * rabbit.unit; y: 0
-            width: 5.2 * rabbit.unit; height: 13.5 * rabbit.unit
-            radius: width / 2
-            color: rabbit.ink
-            transformOrigin: Item.Bottom
-            rotation: -16
-          }
-          Rectangle {
-            x: 10.8 * rabbit.unit; y: 0
-            width: 5.2 * rabbit.unit; height: 13.5 * rabbit.unit
-            radius: width / 2
-            color: rabbit.ink
-            transformOrigin: Item.Bottom
-            rotation: 16
-          }
-
-          // Head
-          Rectangle {
-            x: 3 * rabbit.unit; y: 9.5 * rabbit.unit
-            width: 14 * rabbit.unit; height: 12.5 * rabbit.unit
-            radius: 6.5 * rabbit.unit
-            color: rabbit.ink
-          }
-
-          // Eyes
-          Rectangle {
-            x: 6.6 * rabbit.unit; y: 14 * rabbit.unit
-            width: 2.2 * rabbit.unit; height: width; radius: width / 2
-            color: rabbit.paper
-          }
-          Rectangle {
-            x: 11.2 * rabbit.unit; y: 14 * rabbit.unit
-            width: 2.2 * rabbit.unit; height: width; radius: width / 2
-            color: rabbit.paper
-          }
-
-          // Nose
-          Rectangle {
-            x: 9.1 * rabbit.unit; y: 17.4 * rabbit.unit
-            width: 1.8 * rabbit.unit; height: 1.4 * rabbit.unit; radius: height / 2
-            color: rabbit.paper
-          }
-        }
-      }
-    }
   }
 }
